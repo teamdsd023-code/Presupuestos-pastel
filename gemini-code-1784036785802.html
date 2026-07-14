@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Presupuestos - Pastel Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen flex text-slate-700">
+
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between fixed h-full z-10 print:hidden">
+        <div>
+            <div class="p-6 border-b border-slate-100 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-300 to-pink-300 flex items-center justify-center text-white font-bold text-lg">
+                    P
+                </div>
+                <span class="font-bold text-lg bg-gradient-to-r from-sky-600 to-pink-500 bg-clip-text text-transparent">PastelInvoice</span>
+            </div>
+
+            <nav class="p-4 space-y-2">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-sky-50 text-sky-700 font-medium transition-all duration-200 border border-sky-100/50">
+                    <span class="text-lg">📄</span>
+                    <span>Nuevo Presupuesto</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 font-medium transition-all duration-200 group">
+                    <span class="text-lg text-slate-400 group-hover:text-sky-400">👤</span>
+                    <span>Gestión de Clientes</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 font-medium transition-all duration-200 group">
+                    <span class="text-lg text-slate-400 group-hover:text-pink-400">📦</span>
+                    <span>Inventario</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="p-4 border-t border-slate-100">
+            <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 cursor-pointer">
+                <div class="w-9 h-9 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center font-bold text-sm">
+                    AD
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-800">Admin Dashboard</p>
+                    <p class="text-[10px] text-slate-400">Configuración</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 pl-64 min-h-screen w-full print:pl-0">
+        
+        <div class="max-w-5xl mx-auto py-8 px-6 sm:px-8">
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-6 print:border-none print:shadow-none">
+                
+                <div class="flex justify-between items-start border-b border-slate-100 pb-5">
+                    <div class="flex gap-4 items-center">
+                        <div id="container-logo-presupuesto" class="w-16 h-16 rounded-xl border border-dashed border-slate-200 flex items-center justify-center bg-slate-50 overflow-hidden">
+                            <span id="logo-placeholder" class="text-[10px] font-bold text-slate-400 text-center px-1">Sin Logo</span>
+                            </div>
+
+                        <div>
+                            <div class="text-xs text-slate-500 space-y-0.5">
+                                <h2 id="view-empresa-nombre" class="text-base font-bold text-slate-800 leading-tight">Mi Empresa S.A.S.</h2>
+                                <p class="text-[11px]">NIT: <span id="view-empresa-nit" class="font-medium">900.123.456-7</span></p>
+                                <p class="text-[11px]"><span id="view-empresa-ciudad">Bogotá, Colombia</span> | Tel: <span id="view-empresa-telefono">+57 300 123 4567</span></p>
+                                <p class="text-[11px]">Email: <span id="view-empresa-email">contacto@miempresa.com</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" onclick="abrirConfiguracion()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-semibold transition-all print:hidden shadow-sm">
+                        <span>⚙️</span> Configurar Empresa
+                    </button>
+                </div>
+
+                <div class="bg-slate-50/70 rounded-2xl p-5 border border-slate-100 print:bg-transparent print:border-none print:p-0">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 print:text-slate-800 print:text-sm">Información del Cliente</h3>
+                        
+                        <div class="relative flex items-center print:hidden">
+                            <span class="absolute pl-3 text-slate-400 text-sm">🔍</span>
+                            <input type="text" id="buscar-cliente" placeholder="Buscar cliente por NIT o Nombre..." class="pl-9 pr-20 py-2 w-72 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-300 text-xs shadow-sm bg-white" onkeyup="buscarClienteMock()">
+                            <span id="search-indicator" class="absolute right-3 text-[10px] bg-pink-100 text-pink-600 px-1.5 py-0.5 rounded font-bold hidden">¡Listo!</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 print:grid-cols-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-500">NIT / CC</label>
+                            <input type="text" id="cliente-nit" placeholder="Ej: 10203040" class="mt-1 block w-full rounded-xl border-slate-200 bg-white sm:text-sm p-2.5 border focus:border-sky-400 focus:ring-sky-400 print:border-none print:p-0">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-500">Nombre Completo</label>
+                            <input type="text" id="cliente-nombre" placeholder="Ej: Juan Pérez" class="mt-1 block w-full rounded-xl border-slate-200 bg-white sm:text-sm p-2.5 border focus:border-sky-400 focus:ring-sky-400 print:border-none print:p-0 print:font-semibold">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-500">Ciudad</label>
+                            <input type="text" id="cliente-ciudad" placeholder="Ej: Medellín" class="mt-1 block w-full rounded-xl border-slate-200 bg-white sm:text-sm p-2.5 border focus:border-sky-400 focus:ring-sky-400 print:border-none print:p-0">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-500">Teléfono</label>
+                            <input type="text" id="cliente-telefono" placeholder="Ej: 3115551234" class="mt-1 block w-full rounded-xl border-slate-200 bg-white sm:text-sm p-2.5 border focus:border-sky-400 focus:ring-sky-400 print:border-none print:p-0">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-500">Email</label>
+                            <input type="email" id="cliente-email" placeholder="Ej: juan@mail.com" class="mt-1 block w-full rounded-xl border-slate-200 bg-white sm:text-sm p-2.5 border focus:border-sky-400 focus:ring-sky-400 print:border-none print:p-0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="print:hidden">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Agregar Artículos al Presupuesto</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 bg-gradient-to-r from-sky-50/50 to-pink-50/30 p-4 rounded-2xl border border-sky-100/40">
+                        <div class="md:col-span-5">
+                            <label class="block text-[11px] font-bold text-sky-800">Descripción / Artículo</label>
+                            <input type="text" id="nuevo-articulo" placeholder="Ej: Campaña de Marketing Digital" class="mt-1 block w-full rounded-xl border-slate-200 bg-white sm:text-sm p-2.5 border focus:border-sky-400 focus:ring-sky-400">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[11px] font-bold text-sky-800">Cantidad</label>
+                            <input type="number" id="nuevo-cant" value="1" min="1" class="mt-1 block w-full rounded-xl border-slate-200 bg-white sm:text-sm p-2.5 border focus:border-sky-400 focus:ring-sky-400">
+                        </div>
+                        <div class="md:col-span-3">
+                            <label class="block text-[11px] font-bold text-sky-800">Precio Unitario ($)</label>
+                            <input type="number" id="nuevo-precio" placeholder="Ej: 450000" class="mt-1 block w-full rounded-xl border-slate-200 bg-white sm:text-sm p-2.5 border focus:border-sky-400 focus:ring-sky-400" onkeydown="if(event.key === 'Enter') agregarArticulo()">
+                        </div>
+                        <div class="md:col-span-2 flex items-end">
+                            <button type="button" onclick="agregarArticulo()" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-2.5 px-4 rounded-xl shadow-sm shadow-pink-200 text-sm transition-all transform active:scale-95">
+                                + Añadir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-200 print:border-none">
+                    <table class="min-w-full divide-y divide-slate-200" id="tabla-presupuesto">
+                        <thead class="bg-slate-800 text-white print:bg-slate-100 print:text-slate-800">
+                            <tr>
+                                <th class="px-6 py-3.5 text-left text-xs font-bold uppercase tracking-wider w-1/12">Cant</th>
+                                <th class="px-6 py-3.5 text-left text-xs font-bold uppercase tracking-wider w-5/12">Artículo / Descripción</th>
+                                <th class="px-6 py-3.5 text-right text-xs font-bold uppercase tracking-wider w-2/12">Valor Unitario</th>
+                                <th class="px-6 py-3.5 text-right text-xs font-bold uppercase tracking-wider w-2/12">IVA (19%)</th>
+                                <th class="px-6 py-3.5 text-right text-xs font-bold uppercase tracking-wider w-2/12">Total</th>
+                                <th class="px-6 py-3.5 text-center text-xs font-bold uppercase tracking-wider w-1/12 print:hidden">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-100" id="cuerpo-tabla">
+                            <tr id="fila-vacia">
+                                <td colspan="6" class="px-6 py-10 text-center text-sm text-slate-400 italic">
+                                    No has agregado ningún artículo aún. ¡Utiliza el recuadro superior para añadir productos!
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 pt-4 border-t border-slate-100 print:grid-cols-1">
+                    
+                    <div class="md:col-span-7 space-y-4 text-xs">
+                        <div>
+                            <h4 class="font-bold uppercase tracking-wider text-slate-500 mb-1 text-[11px]">Garantías y Condiciones</h4>
+                            <p id="preview-garantias" class="text-slate-600 bg-slate-50/50 p-3 rounded-xl border border-slate-100 print:bg-transparent print:border-none print:p-0"></p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold uppercase tracking-wider text-slate-500 mb-1 text-[11px]">Observaciones / Notas Adicionales</h4>
+                            <p id="preview-observaciones" class="text-slate-600 bg-slate-50/50 p-3 rounded-xl border border-slate-100 print:bg-transparent print:border-none print:p-0"></p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 print:grid-cols-2">
+                            <div>
+                                <h4 class="font-semibold text-slate-500 text-[11px]">Validez de la Oferta</h4>
+                                <p id="preview-validez" class="mt-1 font-medium text-slate-700"></p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-slate-500 text-[11px]">Método de Pago</h4>
+                                <p id="preview-pago" class="mt-1 font-medium text-slate-700"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-5 bg-gradient-to-b from-slate-50 to-white rounded-2xl p-5 border border-slate-200 flex flex-col justify-between print:border-none print:bg-transparent print:p-0">
+                        <div class="space-y-3">
+                            <div class="flex justify-between text-sm text-slate-500">
+                                <span>Subtotal</span>
+                                <span id="resumen-subtotal" class="font-medium">$ 0.00</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-slate-500">
+                                <span>IVA (19%)</span>
+                                <span id="resumen-iva" class="font-medium">$ 0.00</span>
+                            </div>
+                            <hr class="border-slate-200 my-2">
+                            <div class="flex justify-between text-lg font-bold text-slate-800">
+                                <span>Total General</span>
+                                <span id="resumen-total" class="text-sky-600 print:text-slate-900">$ 0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 pt-4 flex gap-3 print:hidden">
+                            <button type="button" onclick="limpiarPresupuesto()" class="flex-1 bg-white hover:bg-slate-50 text-slate-600 font-semibold py-2.5 px-4 border border-slate-200 rounded-xl shadow-sm text-sm transition-all">
+                                Limpiar todo
+                            </button>
+                            <button type="button" onclick="window.print()" class="flex-1 bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-4 rounded-xl shadow-md shadow-sky-100 text-sm transition-all transform active:scale-95">
+                                Imprimir / PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div id="modal-config" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden print:hidden">
+        <div class="bg-white rounded-2xl w-full max-w-2xl p-6 shadow-xl border border-slate-100 space-y-5 max-h-[90vh] overflow-y-auto animate-fade-in">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <span>⚙️</span> Configuración de la Empresa Emisora
+                </h3>
+                <button onclick="cerrarConfiguracion()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">&times;</button>
+            </div>
+
+            <div class="space-y-4">
+                
+                <div class="space-y-2">
+                    <h4 class="text-xs font-bold text-sky-600 uppercase tracking-wider">Logo de la Empresa</h4>
+                    <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div id="preview-logo-modal" class="w-16 h-16 rounded-lg bg-slate-200 border border-slate-300 flex items-center justify-center text-xs text-slate-400 font-medium overflow-hidden">
+                            <span>Previo</span>
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-xs font-semibold text-slate-500 mb-1">Cargar nueva imagen</label>
+                            <input type="file" id="cfg-logo-input" accept="image/*" onchange="procesarLogo(this)" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100 cursor-pointer">
+                            <p class="text-[10px] text-slate-400 mt-1">Recomendado: Formato cuadrado o apaisado con fondo blanco/transparente (PNG, JPG, SVG).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <h4 class="text-xs font-bold text-sky-600 uppercase tracking-wider">Datos de contacto</h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500">Nombre Comercial</label>
+                        <input type="text" id="cfg-nombre" class="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 border text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500">NIT o Identificación</label>
+                        <input type="text" id="cfg-nit" class="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 border text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500">Ciudad y País</label>
+                        <input type="text" id="cfg-ciudad" class="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 border text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500">Teléfono de contacto</label>
+                        <input type="text" id="cfg-telefono" class="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 border text-sm">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-xs font-semibold text-slate-500">Email Corporativo</label>
+                        <input type="email" id="cfg-email" class="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 border text-sm">
+                    </div>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <h4 class="text-xs font-bold text-pink-500 uppercase tracking-wider">Términos del Presupuesto (Por Defecto)</h4>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500">Garantías y Condiciones</label>
+                        <textarea id="cfg-garantias" rows="2" class="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 border text-sm"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500">Observaciones</label>
+                        <textarea id="cfg-observaciones" rows="2" class="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 border text-sm"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500">Validez</label>
+                            <input type="text" id="cfg-validez" class="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 border text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500">Método de Pago</label>
+                            <input type="text" id="cfg-pago" class="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 border text-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                <button type="button" onclick="cerrarConfiguracion()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold py-2 px-5 rounded-xl text-xs transition-all">
+                    Cancelar
+                </button>
+                <button type="button" onclick="guardarConfiguracion()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-5 rounded-xl text-xs transition-all">
+                    Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos por defecto de la Empresa y Configuración (Se pueden editar desde el Modal)
+        let configEmpresa = {
+            nombre: "Mi Empresa S.A.S.",
+            nit: "900.123.456-7",
+            ciudad: "Bogotá, Colombia",
+            telefono: "+57 300 123 4567",
+            email: "contacto@miempresa.com",
+            logoSrc: null, // Guardará la imagen en formato Base64
+            garantias: "Garantía completa de 12 meses. Incluye soporte técnico prioritario durante los primeros 90 días naturales.",
+            observaciones: "Precios válidos respetando las cantidades estipuladas. Entrega estimada en 5 días hábiles.",
+            validez: "15 Días Calendario",
+            pago: "Transferencia Bancaria Directa"
+        };
+
+        // Simulación de Base de Datos para el buscador
+        const baseClientes = [
+            { nit: "900888777", nombre: "Distribuidora del Norte S.A.", ciudad: "Medellín", telefono: "3154445566", email: "compras@distrinorte.com" },
+            { nit: "123456789", nombre: "Camila Restrepo Medina", ciudad: "Cali", telefono: "3007771122", email: "camila.res@mail.com" },
+            { nit: "800222333", nombre: "Soluciones Globales S.A.S.", ciudad: "Bogotá", telefono: "3109990000", email: "info@solucionesglobales.co" }
+        ];
+
+        let articulos = [];
+        let tempLogoSrc = null; // Variable temporal para cuando el usuario sube un archivo pero aún no pulsa "Guardar"
+
+        // Al cargar la página, inicializamos los valores predeterminados
+        window.onload = function() {
+            renderizarConfiguracion();
+        };
+
+        function renderizarConfiguracion() {
+            // Renderizar datos en la visualización del presupuesto
+            document.getElementById('preview-garantias').innerText = configEmpresa.garantias;
+            document.getElementById('preview-observaciones').innerText = configEmpresa.observaciones;
+            document.getElementById('preview-validez').innerText = configEmpresa.validez;
+            document.getElementById('preview-pago').innerText = configEmpresa.pago;
+
+            // Datos de texto del emisor en la cabecera
+            document.getElementById('view-empresa-nombre').innerText = configEmpresa.nombre;
+            document.getElementById('view-empresa-nit').innerText = configEmpresa.nit;
+            document.getElementById('view-empresa-ciudad').innerText = configEmpresa.ciudad;
+            document.getElementById('view-empresa-telefono').innerText = configEmpresa.telefono;
+            document.getElementById('view-empresa-email').innerText = configEmpresa.email;
+
+            // Renderizado dinámico del Logo en el presupuesto
+            const containerLogo = document.getElementById('container-logo-presupuesto');
+            if (configEmpresa.logoSrc) {
+                containerLogo.innerHTML = `<img src="${configEmpresa.logoSrc}" alt="Logo Empresa" class="w-full h-full object-contain p-1">`;
+            } else {
+                containerLogo.innerHTML = `<span id="logo-placeholder" class="text-[10px] font-bold text-slate-400 text-center px-1">Sin Logo</span>`;
+            }
+        }
+
+        // Procesar archivo cargado localmente (Base64)
+        function procesarLogo(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempLogoSrc = e.target.result;
+                    // Mostrar preview instantáneo en el propio modal
+                    const previewModal = document.getElementById('preview-logo-modal');
+                    previewModal.innerHTML = `<img src="${tempLogoSrc}" alt="Previsualización" class="w-full h-full object-contain p-1">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Gestión del Modal
+        function abrirConfiguracion() {
+            // Sincronizar inputs del modal con el estado de la config actual
+            document.getElementById('cfg-nombre').value = configEmpresa.nombre;
+            document.getElementById('cfg-nit').value = configEmpresa.nit;
+            document.getElementById('cfg-ciudad').value = configEmpresa.ciudad;
+            document.getElementById('cfg-telefono').value = configEmpresa.telefono;
+            document.getElementById('cfg-email').value = configEmpresa.email;
+            document.getElementById('cfg-garantias').value = configEmpresa.garantias;
+            document.getElementById('cfg-observaciones').value = configEmpresa.observaciones;
+            document.getElementById('cfg-validez').value = configEmpresa.validez;
+            document.getElementById('cfg-pago').value = configEmpresa.pago;
+
+            // Resetear el input file físico
+            document.getElementById('cfg-logo-input').value = "";
+            tempLogoSrc = configEmpresa.logoSrc;
+
+            // Mostrar preview del logo que ya estaba guardado en el modal
+            const previewModal = document.getElementById('preview-logo-modal');
+            if (configEmpresa.logoSrc) {
+                previewModal.innerHTML = `<img src="${configEmpresa.logoSrc}" alt="Logo guardado" class="w-full h-full object-contain p-1">`;
+            } else {
+                previewModal.innerHTML = `<span class="text-xs text-slate-400 font-medium">Previo</span>`;
+            }
+
+            document.getElementById('modal-config').classList.remove('hidden');
+        }
+
+        function cerrarConfiguracion() {
+            document.getElementById('modal-config').classList.add('hidden');
+        }
+
+        function guardarConfiguracion() {
+            // Guardar textos
+            configEmpresa.nombre = document.getElementById('cfg-nombre').value;
+            configEmpresa.nit = document.getElementById('cfg-nit').value;
+            configEmpresa.ciudad = document.getElementById('cfg-ciudad').value;
+            configEmpresa.telefono = document.getElementById('cfg-telefono').value;
+            configEmpresa.email = document.getElementById('cfg-email').value;
+            configEmpresa.garantias = document.getElementById('cfg-garantias').value;
+            configEmpresa.observaciones = document.getElementById('cfg-observaciones').value;
+            configEmpresa.validez = document.getElementById('cfg-validez').value;
+            configEmpresa.pago = document.getElementById('cfg-pago').value;
+
+            // Guardar el logo procesado temporalmente
+            configEmpresa.logoSrc = tempLogoSrc;
+
+            renderizarConfiguracion();
+            cerrarConfiguracion();
+        }
+
+        // Buscador
+        function buscarClienteMock() {
+            const query = document.getElementById('buscar-cliente').value.trim().toLowerCase();
+            const indicator = document.getElementById('search-indicator');
+            
+            if (query.length < 2) {
+                indicator.classList.add('hidden');
+                return;
+            }
+
+            const cliente = baseClientes.find(c => 
+                c.nit.includes(query) || c.nombre.toLowerCase().includes(query)
+            );
+
+            if (cliente) {
+                document.getElementById('cliente-nit').value = cliente.nit;
+                document.getElementById('cliente-nombre').value = cliente.nombre;
+                document.getElementById('cliente-ciudad').value = cliente.ciudad;
+                document.getElementById('cliente-telefono').value = cliente.telefono;
+                document.getElementById('cliente-email').value = cliente.email;
+                indicator.classList.remove('hidden');
+            } else {
+                indicator.classList.add('hidden');
+            }
+        }
+
+        function agregarArticulo() {
+            const descripcion = document.getElementById('nuevo-articulo').value.trim();
+            const cantidad = parseInt(document.getElementById('nuevo-cant').value);
+            const precioUnitario = parseFloat(document.getElementById('nuevo-precio').value);
+
+            if (!descripcion || isNaN(cantidad) || cantidad <= 0 || isNaN(precioUnitario) || precioUnitario <= 0) {
+                alert("Por favor rellene los campos de artículo con datos correctos.");
+                return;
+            }
+
+            articulos.push({ id: Date.now(), descripcion, cantidad, precioUnitario });
+            actualizarTabla();
+
+            document.getElementById('nuevo-articulo').value = '';
+            document.getElementById('nuevo-cant').value = '1';
+            document.getElementById('nuevo-precio').value = '';
+            document.getElementById('nuevo-articulo').focus();
+        }
+
+        function eliminarArticulo(id) {
+            articulos = articulos.filter(item => item.id !== id);
+            actualizarTabla();
+        }
+
+        function formatearMoneda(valor) {
+            return new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP',
+                minimumFractionDigits: 0
+            }).format(valor);
+        }
+
+        function actualizarTabla() {
+            const tbody = document.getElementById('cuerpo-tabla');
+            tbody.innerHTML = '';
+
+            if (articulos.length === 0) {
+                tbody.innerHTML = `
+                    <tr id="fila-vacia">
+                        <td colspan="6" class="px-6 py-10 text-center text-sm text-slate-400 italic">
+                            No has agregado ningún artículo aún. ¡Utiliza el recuadro superior para añadir productos!
+                        </td>
+                    </tr>`;
+                actualizarTotales(0, 0, 0);
+                return;
+            }
+
+            let subtotalGlobal = 0;
+            let ivaGlobal = 0;
+
+            articulos.forEach(item => {
+                const subtotalItem = item.cantidad * item.precioUnitario;
+                const ivaItem = subtotalItem * 0.19;
+                const totalItem = subtotalItem + ivaItem;
+
+                subtotalGlobal += subtotalItem;
+                ivaGlobal += ivaItem;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/50 transition-colors print:hover:bg-transparent";
+                tr.innerHTML = `
+                    <td class="px-6 py-4 text-sm text-slate-600">${item.cantidad}</td>
+                    <td class="px-6 py-4 text-sm font-semibold text-slate-800">${item.descripcion}</td>
+                    <td class="px-6 py-4 text-sm text-slate-600 text-right">${formatearMoneda(item.precioUnitario)}</td>
+                    <td class="px-6 py-4 text-sm text-slate-400 text-right print:text-slate-600">${formatearMoneda(ivaItem)}</td>
+                    <td class="px-6 py-4 text-sm font-bold text-slate-800 text-right">${formatearMoneda(totalItem)}</td>
+                    <td class="px-6 py-4 text-center print:hidden">
+                        <button onclick="eliminarArticulo(${item.id})" class="text-pink-500 hover:text-pink-700 font-bold text-xs transition-colors">Remover</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            actualizarTotales(subtotalGlobal, ivaGlobal, subtotalGlobal + ivaGlobal);
+        }
+
+        function actualizarTotales(subtotal, iva, total) {
+            document.getElementById('resumen-subtotal').innerText = formatearMoneda(subtotal);
+            document.getElementById('resumen-iva').innerText = formatearMoneda(iva);
+            document.getElementById('resumen-total').innerText = formatearMoneda(total);
+        }
+
+        function limpiarPresupuesto() {
+            if (confirm("¿Deseas reiniciar y limpiar los datos actuales?")) {
+                articulos = [];
+                actualizarTabla();
+                document.getElementById('cliente-nit').value = '';
+                document.getElementById('cliente-nombre').value = '';
+                document.getElementById('cliente-ciudad').value = '';
+                document.getElementById('cliente-telefono').value = '';
+                document.getElementById('cliente-email').value = '';
+                document.getElementById('buscar-cliente').value = '';
+            }
+        }
+    </script>
+
+    <style>
+        @media print {
+            aside { display: none !important; }
+            main { padding-left: 0 !important; }
+            body { background-color: white !important; }
+            .bg-white { border: none !important; shadow: none !important; box-shadow: none !important; }
+            
+            input, textarea { 
+                border: none !important; 
+                background-color: transparent !important; 
+                padding: 0 !important; 
+                box-shadow: none !important;
+                resize: none !important;
+                outline: none !important;
+            }
+            
+            input::placeholder, textarea::placeholder {
+                color: transparent !important;
+            }
+            
+            .print\:hidden { display: none !important; }
+        }
+    </style>
+</body>
+</html>
